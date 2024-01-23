@@ -1,7 +1,3 @@
-// import Retell, {
-//   convertFloat32ToPCM16,
-//   convertPCM16ToFloat32,
-// } from "./retell.ts";
 import React from "react";
 import "./App.css";
 import {
@@ -16,7 +12,6 @@ const demoApiKey = "YOUR KEY";
 const demoSampleRate = 44100;
 
 function App() {
-  // const retellClient = new Retell(demoApiKey, "https://localhost:3002");
   const retell = new RetellClient({
     apiKey: demoApiKey,
   });
