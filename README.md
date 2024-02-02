@@ -1,8 +1,10 @@
-# Retell Frontend Demo (React/Node.js)
+# Retell Frontend Demo Using Native JS(React/Node.js)
 
 ## Context
 
-This demo illustrates a quick setup for integrating a frontend with a backend using React and Node.js. It showcases **native JavaScript integration**. If you prefer using our JS client SDK, check [Retell Frontend ReactJS Demo](https://github.com/adam-team/retell-frontend-reactjs-demo/tree/client_sdk) out instead.
+This demo illustrates a quick setup for integrating a frontend with a backend using React and Node.js. It showcases **native JavaScript integration**. 
+
+If you prefer using our JS client SDK, check [Retell Frontend ReactJS Demo](https://github.com/adam-team/retell-frontend-reactjs-demo/tree/client_sdk) out instead.
 
 
 ## Setup Tutorial
