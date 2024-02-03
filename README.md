@@ -1,10 +1,8 @@
-# Retell Frontend Demo Using Native JS(React/Node.js)
+# Retell Frontend Demo using Client SDK (React/Node.js)
 
 ## Context
 
-This demo illustrates a quick setup for integrating a frontend with a backend using React and Node.js. It showcases **native JavaScript integration**. 
-
-If you prefer using our JS client SDK, check [Retell Frontend ReactJS Demo](https://github.com/adam-team/retell-frontend-reactjs-demo/tree/client_sdk) out instead.
+This demo illustrates a quick setup for integrating a frontend with a backend using React and Node.js. It showcases using **our JS Client SDK**. If you prefer using native JS implementation, check [Retell Frontend ReactJS Demo using native JS](https://github.com/adam-team/retell-frontend-reactjs-demo/) out instead.
 
 
 ## Setup Tutorial
@@ -15,15 +13,23 @@ Watch our [video tutorial](https://docs.re-tell.ai/guide/quick-start-node) for a
 ## Get Started
 
 Step 1:
-`npm install retell-sdk`
+`npm install retell-client-js-sdk`
 
 Step 2:
-Replace `apiKey` `agentId` below. You can find API key in https://beta.re-tell.ai/dashboard/, and create an agent there or using API.
 
-```
-const apiKey = "YOUR_RETELL_API_KEY";
+```javascript
+import { RetellClientSdk } from "retell-client-js-sdk";
 
-const agentId = "YOUR_RETELL_AGENT_ID";
+const sdk = new RetellClientSdk();
+
+// Call post-register-call at your server and return callId and sampleRate
+// https://docs.re-tell.ai/api-references/post-register-call
+
+// Start the conversation with the agent
+sdk.startConversation({
+        callId,
+        sampleRate
+})
 ```
 
 
