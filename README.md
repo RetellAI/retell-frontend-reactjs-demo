@@ -2,7 +2,7 @@
 
 ## Context
 
-This demo illustrates a quick setup for integrating a frontend with a backend using React and Node.js. It showcases using **our JS Client SDK**. If you prefer using native JS implementation, check [Retell Frontend ReactJS Demo using native JS](https://github.com/adam-team/retell-frontend-reactjs-demo/) out instead.
+This demo illustrates a quick setup for integrating a frontend with a backend using React and Node.js. It showcases using **our JS Client SDK**.
 
 
 ## Setup Tutorial
