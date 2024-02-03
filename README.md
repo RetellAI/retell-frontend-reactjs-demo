@@ -16,16 +16,19 @@ Step 1:
 `npm install retell-client-js-sdk`
 
 Step 2:
-Replace `apiKey` `agentId` below. You can find API key in https://beta.re-tell.ai/dashboard/, and create an agent there or using API.
 
 ```javascript
 import { RetellClientSdk } from "retell-client-js-sdk";
 
-const sdk = new RetellClientSdk(apiKey);
+const sdk = new RetellClientSdk();
+
+// Call post-register-call at your server and return callId and sampleRate
+// https://docs.re-tell.ai/api-references/post-register-call
 
 // Start the conversation with the agent
 sdk.startConversation({
-        agentId,
+        callId,
+        sampleRate
 })
 ```
 
