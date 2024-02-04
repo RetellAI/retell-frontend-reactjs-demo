@@ -1,4 +1,4 @@
-# Retell Frontend Demo using Client SDK (React/Node.js)
+# Retell Frontend Demo using Native JS (React/Node.js)
 
 ## Context
 

@@ -5,8 +5,8 @@ import { RetellClientSdk } from "retell-client-js-sdk";
 const agentId = "Your_Agent_Id";
 
 interface RegisterCallResponse {
-  call_id?: string;
-  sample_rate?: number;
+  callId?: string;
+  sampleRate?: number;
 }
 const sdk = new RetellClientSdk();
 const App = () => {
@@ -35,10 +35,10 @@ const App = () => {
       sdk.stopConversation();
     } else {
       const registerCallResponse = await registerCall(agentId);
-      if (registerCallResponse.call_id) {
+      if (registerCallResponse.callId) {
         sdk.startConversation({
-          callId: registerCallResponse.call_id,
-          sampleRate: registerCallResponse.sample_rate
+          callId: registerCallResponse.callId,
+          sampleRate: registerCallResponse.sampleRate
         }).catch(console.error);
         setIsCalling(true); // Update button to "Stop" when conversation starts
       }
