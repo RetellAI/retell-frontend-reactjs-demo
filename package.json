@@ -14,7 +14,7 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "recordrtc": "^5.6.2",
-    "retell-client-js-sdk": "^1.1.1",
+    "retell-client-js-sdk": "^1.1.3",
     "retell-sdk": "^2.2.6",
     "stream": "^0.0.2",
     "web-vitals": "^2.1.4"
