@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { RetellWebClient } from "retell-client-js-sdk";
 
-const agentId = "Your_Agent_Id";
+const agentId = "YOUR_AGENT_ID";
 
 interface RegisterCallResponse {
   callId?: string;
-  sampleRate?: number;
+  sampleRate: number;
 }
 
 const webClient = new RetellWebClient();
@@ -17,15 +17,15 @@ const App = () => {
   // Initialize the SDK
   useEffect(() => {
     // Setup event listeners
-    webClient.on("open", () => {
-      console.log("open");
+    webClient.on("conversationStarted", () => {
+      console.log("conversationStarted");
     });
 
     webClient.on("audio", (audio: Uint8Array) => {
-      // console.log(audio);
+      console.log("There is audio");
     });
 
-    webClient.on("close", ({ code, reason }) => {
+    webClient.on("conversationEnded", ({ code, reason }) => {
       console.log("Closed with code:", code, ", reason:", reason);
       setIsCalling(false); // Update button to "Start" when conversation ends
     });
@@ -37,7 +37,7 @@ const App = () => {
 
     webClient.on("update", (update) => {
       // Print live transcript as needed
-      // console.log("update", update);
+      console.log("update", update);
     });
   }, []);
 
@@ -51,6 +51,7 @@ const App = () => {
           .startConversation({
             callId: registerCallResponse.callId,
             sampleRate: registerCallResponse.sampleRate,
+            enableUpdate: true,
           })
           .catch(console.error);
         setIsCalling(true); // Update button to "Stop" when conversation starts
@@ -82,7 +83,7 @@ const App = () => {
       return data;
     } catch (err) {
       console.log(err);
-      return {}; // Return an error
+      throw new Error(err);
     }
   }
 

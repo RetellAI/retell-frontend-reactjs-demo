@@ -12,7 +12,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "retell-client-js-sdk": "^1.1.6",
+    "retell-client-js-sdk": "^1.2.0",
     "stream": "^0.0.2"
   },
   "devDependencies": {
