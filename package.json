@@ -8,16 +8,12 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/react": "^18.2.44",
     "@types/react-dom": "^18.2.17",
-    "axios": "^1.6.2",
     "buffer": "^6.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "recordrtc": "^5.6.2",
-    "retell-client-js-sdk": "^1.1.3",
-    "retell-sdk": "^2.2.6",
-    "stream": "^0.0.2",
-    "web-vitals": "^2.1.4"
+    "retell-client-js-sdk": "^1.1.6",
+    "stream": "^0.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.10.4"

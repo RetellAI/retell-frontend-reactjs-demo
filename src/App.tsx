@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { RetellClientSdk } from "retell-client-js-sdk";
+import { RetellWebClient } from "retell-client-js-sdk";
 
 const agentId = "Your_Agent_Id";
 
@@ -8,38 +8,51 @@ interface RegisterCallResponse {
   callId?: string;
   sampleRate?: number;
 }
-const sdk = new RetellClientSdk();
+
+const webClient = new RetellWebClient();
+
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
 
   // Initialize the SDK
   useEffect(() => {
     // Setup event listeners
-    sdk.on("onConversationStarted", () => {
-      console.log("Conversation started");
+    webClient.on("open", () => {
+      console.log("open");
     });
 
-    sdk.on("onConversationEnded", (reason) => {
-      console.log("Conversation ended");
+    webClient.on("audio", (audio: Uint8Array) => {
+      // console.log(audio);
+    });
+
+    webClient.on("close", ({ code, reason }) => {
+      console.log("Closed with code:", code, ", reason:", reason);
       setIsCalling(false); // Update button to "Start" when conversation ends
     });
 
-    sdk.on("onError", (error) => {
+    webClient.on("error", (error) => {
       console.error("An error occurred:", error);
       setIsCalling(false); // Update button to "Start" in case of error
+    });
+
+    webClient.on("update", (update) => {
+      // Print live transcript as needed
+      // console.log("update", update);
     });
   }, []);
 
   const toggleConversation = async () => {
     if (isCalling) {
-      sdk.stopConversation();
+      webClient.stopConversation();
     } else {
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.callId) {
-        sdk.startConversation({
-          callId: registerCallResponse.callId,
-          sampleRate: registerCallResponse.sampleRate
-        }).catch(console.error);
+        webClient
+          .startConversation({
+            callId: registerCallResponse.callId,
+            sampleRate: registerCallResponse.sampleRate,
+          })
+          .catch(console.error);
         setIsCalling(true); // Update button to "Stop" when conversation starts
       }
     }
@@ -48,15 +61,18 @@ const App = () => {
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     try {
       // Replace with your server url
-      const response = await fetch('http://localhost:8080/register-call-on-your-server', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        "http://localhost:8080/register-call-on-your-server",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            agentId: agentId,
+          }),
         },
-        body: JSON.stringify({
-          agentId: agentId,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
@@ -65,7 +81,7 @@ const App = () => {
       const data: RegisterCallResponse = await response.json();
       return data;
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return {}; // Return an error
     }
   }
