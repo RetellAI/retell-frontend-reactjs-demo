@@ -5,8 +5,8 @@ import { RetellWebClient } from "retell-client-js-sdk";
 const agentId = "YOUR_AGENT_ID";
 
 interface RegisterCallResponse {
-  callId?: string;
-  sampleRate: number;
+  call_id?: string;
+  sample_rate: number;
 }
 
 const webClient = new RetellWebClient();
@@ -46,11 +46,11 @@ const App = () => {
       webClient.stopConversation();
     } else {
       const registerCallResponse = await registerCall(agentId);
-      if (registerCallResponse.callId) {
+      if (registerCallResponse.call_id) {
         webClient
           .startConversation({
-            callId: registerCallResponse.callId,
-            sampleRate: registerCallResponse.sampleRate,
+            callId: registerCallResponse.call_id,
+            sampleRate: registerCallResponse.sample_rate,
             enableUpdate: true,
           })
           .catch(console.error);
@@ -70,7 +70,7 @@ const App = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            agentId: agentId,
+            agent_id: agentId,
           }),
         },
       );
