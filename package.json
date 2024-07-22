@@ -13,7 +13,8 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "retell-client-js-sdk": "^1.2.1",
-    "stream": "^0.0.2"
+    "stream": "^0.0.2",
+    "node-fetch": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.4"
