@@ -3,9 +3,11 @@ const fetch = require('node-fetch');
 export default async function handler(req, res) {
   const { agentId } = req.body;
   const apiKey = process.env.RETELL_API;
+  const sampleRate = parseInt(process.env.RETELL_SAMPLE_RATE || '16000', 10);
 
   console.log('Using Agent ID:', agentId);
   console.log('API Key (first 4 chars):', apiKey.substring(0, 4));
+  console.log('Sample Rate:', sampleRate);
 
   try {
     const response = await fetch('https://api.retellai.com/v2/create-web-call', {
@@ -34,7 +36,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       callId: data.call_id,
       accessToken: data.access_token,
-      sampleRate: 16000 // The documentation doesn't mention sample_rate, so we'll use a default value
+      sampleRate: sampleRate
     });
   } catch (error) {
     console.error('Error registering call:', error);
