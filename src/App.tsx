@@ -59,33 +59,29 @@ const App = () => {
     }
   };
 
-  async function registerCall(agentId: string): Promise<RegisterCallResponse> {
-    try {
-      // Replace with your server url
-      const response = await fetch(
-        "http://localhost:8080/register-call-on-your-server",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            agentId: agentId,
-          }),
-        },
-      );
+async function registerCall(agentId: string): Promise<RegisterCallResponse> {
+  try {
+    const response = await fetch("/api/register-call", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agentId: agentId,
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const data: RegisterCallResponse = await response.json();
-      return data;
-    } catch (err) {
-      console.log(err);
-      throw new Error(err);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
     }
+
+    const data: RegisterCallResponse = await response.json();
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw new Error(String(err));
   }
+}
 
   return (
     <div className="App">
