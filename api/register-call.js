@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 export default async function handler(req, res) {
   const { agentId } = req.body;
-  const apiKey = process.env.REACT_APP_RETELL_API;
+  const apiKey = process.env.RETELL_API;
 
   try {
     const response = await fetch('https://api.retellai.com/call', {
@@ -17,10 +17,22 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await response.json();
+    // Log the response status and headers
+    console.log('Response status:', response.status);
+    console.log('Response headers:', response.headers.raw());
+
+    const text = await response.text();
+    console.log('Response body:', text);
 
     if (!response.ok) {
-      throw new Error(data.message || 'Failed to register call');
+      throw new Error(`API error: ${response.status} ${text}`);
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      throw new Error(`Invalid JSON: ${text}`);
     }
 
     res.status(200).json({
@@ -29,6 +41,6 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Error registering call:', error);
-    res.status(500).json({ error: 'Failed to register call' });
+    res.status(500).json({ error: error.message });
   }
 }
