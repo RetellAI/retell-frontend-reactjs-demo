@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import { RetellWebClient } from "retell-client-js-sdk";
 
-const agentId = "YOUR_AGENT_ID";
+const agentId = process.env.REACT_APP_RETELL_AGENTID;
 
 interface RegisterCallResponse {
   callId?: string;
