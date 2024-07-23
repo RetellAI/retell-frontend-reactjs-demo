@@ -17,6 +17,7 @@ const App = () => {
   const portraitRef = useRef<HTMLImageElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     console.log("Component mounted");
@@ -69,14 +70,14 @@ const App = () => {
   }, []);
 
   const updateHaloEffect = () => {
-    if (analyserRef.current && portraitRef.current) {
+    if (analyserRef.current && containerRef.current) {
       const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
       analyserRef.current.getByteFrequencyData(dataArray);
 
       const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
       const normalizedAverage = average / 255;
 
-      portraitRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
+      containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
 
       requestAnimationFrame(updateHaloEffect);
     }
@@ -134,13 +135,16 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <div className="portrait-container">
+        <div 
+          ref={containerRef} 
+          className={`portrait-container ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
+          onClick={toggleConversation}
+        >
           <img 
             ref={portraitRef}
-            src="/Fiona_Round.png" 
+            src={`${process.env.PUBLIC_URL}/Fiona_Round.png`}
             alt="Agent Portrait" 
-            className={`agent-portrait ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
-            onClick={toggleConversation}
+            className="agent-portrait"
           />
         </div>
       </header>
