@@ -18,7 +18,7 @@
   border-radius: 50%;
   overflow: visible;
   cursor: pointer;
-  transition: all 0.3s ease, box-shadow 0.5s ease, transform 0.3s ease;
+  transition: all 0.3s ease, transform 0.3s ease;
   box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
 }
 .agent-portrait {
@@ -36,10 +36,23 @@
 }
 .portrait-container.active {
   box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
+  transition: box-shadow 0.5s ease;
 }
 .portrait-container.active.agent-speaking {
   animation: pulse 3s infinite ease-in-out;
 }
+.portrait-container.inactive .agent-portrait {
+  filter: saturate(75%);
+}
+/* Smooth transitions for all states */
+.portrait-container,
+.portrait-container.active,
+.portrait-container.active.agent-speaking,
+.portrait-container.active:not(.agent-speaking),
+.portrait-container.inactive {
+  transition: all 0.5s ease, transform 0.3s ease, box-shadow 0.5s ease;
+}
+
 @keyframes pulse {
   0%, 100% {
     box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
@@ -48,33 +61,23 @@
     box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.3);
   }
 }
-.portrait-container.inactive {
-  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+
+/* Add a pseudo-element for the speaking halo */
+.portrait-container::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0);
+  opacity: 0;
+  transition: opacity 0.5s ease, box-shadow 0.5s ease;
+  pointer-events: none;
 }
-.portrait-container.inactive .agent-portrait {
-  filter: saturate(75%);
-}
-/* Ensure smooth transitions between all states */
-.portrait-container,
-.portrait-container.active,
-.portrait-container.active.agent-speaking,
-.portrait-container.active:not(.agent-speaking),
-.portrait-container.inactive {
-  transition: all 0.5s ease, transform 0.3s ease, box-shadow 0.5s ease;
-}
-/* Override the animation only when speaking */
-.portrait-container.active.agent-speaking {
+
+.portrait-container.active.agent-speaking::after {
+  opacity: 1;
   animation: pulse 3s infinite ease-in-out;
-}
-/* Add a fade-out for the animation when not speaking */
-.portrait-container.active:not(.agent-speaking) {
-  animation: fade-out 0.5s forwards;
-}
-@keyframes fade-out {
-  from {
-    box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.3);
-  }
-  to {
-    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
-  }
 }
