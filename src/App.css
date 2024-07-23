@@ -19,44 +19,38 @@
   overflow: visible;
   cursor: pointer;
   transition: all 0.3s ease, transform 0.3s ease;
-  --halo-color: rgba(0, 255, 0, 0);
-  --halo-size: 0px;
-  --halo-spread: 0px;
-  box-shadow: 0 0 var(--halo-size) var(--halo-spread) var(--halo-color);
 }
-.agent-portrait {
+
+.portrait-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  object-fit: cover;
   border-radius: 50%;
+  box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
+  opacity: 0;
   transition: all 0.3s ease;
 }
-.portrait-container:hover {
-  transform: scale(1.05);
+
+.portrait-container.active::after {
+  opacity: 1;
 }
-.portrait-container:hover .agent-portrait {
-  filter: saturate(110%);
-}
-.portrait-container.active {
-  --halo-color: rgba(255, 255, 255, 0.3);
-  --halo-size: 20px;
-  --halo-spread: 10px;
-}
-.portrait-container.active.agent-speaking {
-  animation: pulse 3s infinite;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+
+.portrait-container.active.agent-speaking::after {
+  animation: pulse 3s infinite ease-in-out;
 }
 
 @keyframes pulse {
   0%, 100% {
-    --halo-color: rgba(0, 255, 0, 0.2);
-    --halo-size: 20px;
-    --halo-spread: 10px;
+    box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
+    transform: translate(-50%, -50%) scale(1);
   }
   50% {
-    --halo-color: rgba(0, 255, 0, 0.3);
-    --halo-size: 30px;
-    --halo-spread: 15px;
+    box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.3);
+    transform: translate(-50%, -50%) scale(1.1);
   }
 }
 .portrait-container.inactive .agent-portrait {
