@@ -137,7 +137,7 @@ const App = () => {
         <div className="portrait-container">
           <img 
             ref={portraitRef}
-            src="/Fiona_round.png" 
+            src="/Fiona_Round.png" 
             alt="Agent Portrait" 
             className={`agent-portrait ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
             onClick={toggleConversation}
