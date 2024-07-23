@@ -3,7 +3,7 @@ import "./App.css";
 import { RetellWebClient } from "retell-client-js-sdk";
 
 const agentId = process.env.REACT_APP_RETELL_AGENTID;
-const apiKey = process.env.RETELL_API_KEY;
+const apiKey = process.env.RETELL_API;
 
 interface RegisterCallResponse {
   call_id: string;
