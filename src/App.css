@@ -40,18 +40,18 @@
 }
 
 .portrait-container.active.agent-speaking {
-  animation: pulse 1s infinite ease-in-out;
+  animation: pulse 2s infinite ease-in-out;
 }
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
   }
   50% {
-    box-shadow: 0 0 25px 12.5px rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.5);
   }
   100% {
-    box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.3);
+    box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
   }
 }
 
