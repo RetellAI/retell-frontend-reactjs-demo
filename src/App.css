@@ -15,10 +15,8 @@
   position: relative;
   width: 200px;
   height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 .agent-portrait {
   width: 100%;
@@ -27,18 +25,16 @@
   border-radius: 50%;
   transition: all 0.3s ease;
 }
-.portrait-container::after {
-  content: '';
+.halo {
   position: absolute;
   top: -10px;
   left: -10px;
   right: -10px;
   bottom: -10px;
   border-radius: 50%;
-  box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
-  opacity: 0;
-  transition: all 0.3s ease;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 .portrait-container:hover {
   transform: scale(1.05);
@@ -46,10 +42,11 @@
 .portrait-container:hover .agent-portrait {
   filter: saturate(110%);
 }
-.portrait-container.active::after {
+.portrait-container.active .halo {
   opacity: 1;
+  box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
 }
-.portrait-container.active.agent-speaking::after {
+.portrait-container.active.agent-speaking .halo {
   animation: pulse 3s infinite ease-in-out;
 }
 @keyframes pulse {
