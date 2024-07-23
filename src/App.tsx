@@ -20,7 +20,7 @@ const App = () => {
     webClient.on("conversationStarted", () => {
       console.log("conversationStarted");
       setCallStatus('active');
-      setIsAgentSpeaking(true);  // Set agent speaking to true when call starts
+      setIsAgentSpeaking(true);
     });
 
     webClient.on("conversationEnded", ({ code, reason }) => {
@@ -49,6 +49,8 @@ const App = () => {
     if (callStatus === 'active') {
       webClient.stopConversation();
     } else {
+      setCallStatus('active');
+      setIsAgentSpeaking(true);
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.callId) {
         webClient
@@ -61,8 +63,7 @@ const App = () => {
       }
     }
   };
-
-
+  
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     console.log("Registering call for agent:", agentId);
     try {
