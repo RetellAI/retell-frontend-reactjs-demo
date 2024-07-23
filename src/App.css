@@ -35,22 +35,10 @@
   transform: scale(1.05);
 }
 
-.portrait-container.active {
-  animation: pulse 2s infinite;
-}
-
-.portrait-container.listening {
+.portrait-container.active.user-speaking {
   box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-  }
+.portrait-container.active.agent-speaking {
+  animation: none;  /* Remove default pulse animation */
 }
