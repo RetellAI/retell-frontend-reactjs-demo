@@ -20,7 +20,8 @@
   border-radius: 50%;
   overflow: visible;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, box-shadow 0.5s ease;
+  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
 }
 
 .agent-portrait {
@@ -39,20 +40,29 @@
   filter: saturate(110%);
 }
 
-.portrait-container.active.agent-speaking {
-  animation: pulse 2s infinite ease-in-out;
+.portrait-container.active {
+  box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.3);
 }
+
+.portrait-container.active.agent-speaking {
+  animation: pulse 3s infinite ease-in-out;
+}
+
 
 @keyframes pulse {
   0% {
     box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
   }
   50% {
-    box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.5);
+    box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.3);
   }
   100% {
     box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
   }
+}
+
+.portrait-container.inactive {
+  box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
 }
 
 .portrait-container.inactive .agent-portrait {
