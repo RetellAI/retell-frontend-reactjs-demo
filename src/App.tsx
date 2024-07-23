@@ -13,6 +13,8 @@ const webClient = new RetellWebClient();
 
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const portraitRef = useRef<HTMLImageElement>(null);
 
   // Initialize the SDK
   useEffect(() => {
@@ -86,9 +88,15 @@ async function registerCall(agentId: string): Promise<RegisterCallResponse> {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={toggleConversation}>
-          {isCalling ? "Stop" : "Start"}
-        </button>
+        <div className="portrait-container">
+          <img 
+            ref={portraitRef}
+            src="/agent-portrait.jpg" 
+            alt="Agent Portrait" 
+            className={`agent-portrait ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
+            onClick={toggleConversation}
+          />
+        </div>
       </header>
     </div>
   );
