@@ -19,6 +19,9 @@ const App = () => {
   const analyserRef = useRef<AnalyserNode | null>(null);
 
   useEffect(() => {
+    console.log("Component mounted");
+    console.log("Agent ID:", agentId);
+
     audioContextRef.current = new AudioContext();
     analyserRef.current = audioContextRef.current.createAnalyser();
     analyserRef.current.fftSize = 256;
@@ -29,6 +32,7 @@ const App = () => {
     });
 
     webClient.on("audio", (audio: Uint8Array) => {
+      console.log("Received audio data");
       if (audioContextRef.current && analyserRef.current) {
         const audioBuffer = audioContextRef.current.createBuffer(1, audio.length, audioContextRef.current.sampleRate);
         audioBuffer.getChannelData(0).set(audio);
@@ -79,11 +83,15 @@ const App = () => {
   };
 
   const toggleConversation = async () => {
+    console.log("toggleConversation called");
     if (isCalling) {
+      console.log("Stopping conversation");
       webClient.stopConversation();
     } else {
+      console.log("Starting conversation");
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.callId) {
+        console.log("Call registered, starting conversation");
         webClient
           .startConversation({
             callId: registerCallResponse.callId,
@@ -91,12 +99,36 @@ const App = () => {
             enableUpdate: true,
           })
           .catch(console.error);
+      } else {
+        console.error("Failed to register call");
       }
     }
   };
 
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
-    // ... (keep existing registerCall function)
+    console.log("Registering call for agent:", agentId);
+    try {
+      const response = await fetch("/api/register-call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          agentId: agentId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data: RegisterCallResponse = await response.json();
+      console.log("Call registered successfully:", data);
+      return data;
+    } catch (err) {
+      console.error("Error registering call:", err);
+      throw new Error(String(err));
+    }
   }
 
   return (
@@ -105,8 +137,8 @@ const App = () => {
         <div className="portrait-container">
           <img 
             ref={portraitRef}
-            src="/public/Fiona_round.png" 
-            alt="Fiona Portrait" 
+            src="/Fiona_round.png" 
+            alt="Agent Portrait" 
             className={`agent-portrait ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
             onClick={toggleConversation}
           />
