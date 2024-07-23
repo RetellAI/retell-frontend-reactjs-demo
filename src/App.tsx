@@ -4,6 +4,7 @@ import { RetellWebClient } from "retell-client-js-sdk";
 
 const agentId = process.env.REACT_APP_RETELL_AGENTID;
 const apiKey = process.env.RETELL_API;
+const sampleRate = parseInt(process.env.RETELL_SAMPLE_RATE || '16000', 10);
 
 interface RegisterCallResponse {
   call_id: string;
@@ -77,6 +78,7 @@ const App = () => {
             .startConversation({
               callId: registerCallResponse.call_id,
               accessToken: registerCallResponse.access_token,
+              sampleRate: sampleRate,
               enableUpdate: true,
             })
             .catch(console.error);
