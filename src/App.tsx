@@ -91,8 +91,8 @@ async function registerCall(agentId: string): Promise<RegisterCallResponse> {
         <div className="portrait-container">
           <img 
             ref={portraitRef}
-            src="/agent-portrait.jpg" 
-            alt="Agent Portrait" 
+            src="/public/Fiona_round.png" 
+            alt="Fiona Portrait" 
             className={`agent-portrait ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
             onClick={toggleConversation}
           />
