@@ -13,16 +13,13 @@ const webClient = new RetellWebClient();
 
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const portraitRef = useRef<HTMLImageElement>(null);
+  const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    console.log("Component mounted");
-    console.log("Agent ID:", agentId);
-
     audioContextRef.current = new AudioContext();
     analyserRef.current = audioContextRef.current.createAnalyser();
     analyserRef.current.fftSize = 256;
@@ -33,7 +30,6 @@ const App = () => {
     });
 
     webClient.on("audio", (audio: Uint8Array) => {
-      console.log("Received audio data");
       if (audioContextRef.current && analyserRef.current) {
         const audioBuffer = audioContextRef.current.createBuffer(1, audio.length, audioContextRef.current.sampleRate);
         audioBuffer.getChannelData(0).set(audio);
@@ -41,6 +37,7 @@ const App = () => {
         source.buffer = audioBuffer;
         source.connect(analyserRef.current);
         source.start();
+        setIsAgentSpeaking(true);
         updateHaloEffect();
       }
     });
@@ -48,23 +45,31 @@ const App = () => {
     webClient.on("conversationEnded", ({ code, reason }) => {
       console.log("Closed with code:", code, ", reason:", reason);
       setIsCalling(false);
-      setIsListening(false);
+      setIsAgentSpeaking(false);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     });
 
     webClient.on("error", (error) => {
       console.error("An error occurred:", error);
       setIsCalling(false);
-      setIsListening(false);
+      setIsAgentSpeaking(false);
     });
 
     webClient.on("update", (update) => {
       console.log("update", update);
-      setIsListening(update.type === "interim" || update.type === "final");
+      if (update.type === "interim" || update.type === "final") {
+        setIsAgentSpeaking(false);
+      }
     });
 
     return () => {
       if (audioContextRef.current) {
         audioContextRef.current.close();
+      }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
   }, []);
@@ -77,22 +82,22 @@ const App = () => {
       const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
       const normalizedAverage = average / 255;
 
-      containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
+      if (isAgentSpeaking) {
+        containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
+      } else {
+        containerRef.current.style.boxShadow = '0 0 0 10px rgba(255, 255, 255, 0.7)';
+      }
 
-      requestAnimationFrame(updateHaloEffect);
+      animationFrameRef.current = requestAnimationFrame(updateHaloEffect);
     }
   };
 
   const toggleConversation = async () => {
-    console.log("toggleConversation called");
     if (isCalling) {
-      console.log("Stopping conversation");
       webClient.stopConversation();
     } else {
-      console.log("Starting conversation");
       const registerCallResponse = await registerCall(agentId);
       if (registerCallResponse.callId) {
-        console.log("Call registered, starting conversation");
         webClient
           .startConversation({
             callId: registerCallResponse.callId,
@@ -100,8 +105,6 @@ const App = () => {
             enableUpdate: true,
           })
           .catch(console.error);
-      } else {
-        console.error("Failed to register call");
       }
     }
   };
@@ -137,11 +140,10 @@ const App = () => {
       <header className="App-header">
         <div 
           ref={containerRef} 
-          className={`portrait-container ${isCalling ? 'active' : ''} ${isListening ? 'listening' : ''}`}
+          className={`portrait-container ${isCalling ? 'active' : ''} ${isAgentSpeaking ? 'agent-speaking' : 'user-speaking'}`}
           onClick={toggleConversation}
         >
           <img 
-            ref={portraitRef}
             src={`${process.env.PUBLIC_URL}/Fiona_Round.png`}
             alt="Agent Portrait" 
             className="agent-portrait"
