@@ -1,18 +1,3 @@
-.App {
-  text-align: center;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 .portrait-container {
   position: relative;
   width: 200px;
@@ -36,7 +21,6 @@
 
 .portrait-container.agent-speaking {
   animation: none;
-  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
 .portrait-container.user-speaking {
