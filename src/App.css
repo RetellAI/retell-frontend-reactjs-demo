@@ -1,6 +1,7 @@
 .App {
   text-align: center;
 }
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -11,6 +12,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 .portrait-container {
   position: relative;
   width: 200px;
@@ -18,9 +20,10 @@
   border-radius: 50%;
   overflow: visible;
   cursor: pointer;
-  transition: all 0.3s ease, box-shadow 0.5s ease;
+  transition: all 0.3s ease, box-shadow 0.5s ease, transform 0.3s ease;
   box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
 }
+
 .agent-portrait {
   width: 100%;
   height: 100%;
@@ -28,18 +31,23 @@
   border-radius: 50%;
   transition: all 0.3s ease;
 }
+
 .portrait-container:hover {
   transform: scale(1.05);
 }
+
 .portrait-container:hover .agent-portrait {
   filter: saturate(110%);
 }
+
 .portrait-container.active {
   box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
 }
+
 .portrait-container.active.agent-speaking {
   animation: pulse 3s infinite ease-in-out;
 }
+
 @keyframes pulse {
   0%, 100% {
     box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
@@ -48,23 +56,25 @@
     box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.3);
   }
 }
+
 .portrait-container.inactive {
   box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
 }
+
 .portrait-container.inactive .agent-portrait {
   filter: saturate(75%);
 }
 
-/* New styles for smooth transitions */
-.portrait-container.active {
-  transition: box-shadow 0.5s ease;
+/* Ensure smooth transitions between all states */
+.portrait-container,
+.portrait-container.active,
+.portrait-container.active.agent-speaking,
+.portrait-container.active:not(.agent-speaking),
+.portrait-container.inactive {
+  transition: all 0.5s ease, transform 0.3s ease;
 }
 
+/* Override the animation only when speaking */
 .portrait-container.active.agent-speaking {
   animation: pulse 3s infinite ease-in-out;
-}
-
-.portrait-container.active:not(.agent-speaking) {
-  animation: none;
-  transition: box-shadow 0.5s ease;
 }
