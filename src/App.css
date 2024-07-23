@@ -18,7 +18,7 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -39,12 +39,16 @@
   filter: saturate(110%);
 }
 
-.portrait-container.active {
-  box-shadow: 0 0 0 10px rgba(0, 255, 0, 0.7);
-}
-
-.portrait-container.active:not(.agent-speaking) {
-  box-shadow: none;
+.portrait-container.active.agent-speaking::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,255,0,0.5) 0%, rgba(0,255,0,0) 70%);
+  z-index: -1;
 }
 
 .portrait-container.inactive .agent-portrait {
