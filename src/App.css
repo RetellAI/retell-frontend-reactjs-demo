@@ -35,7 +35,6 @@
 }
 .portrait-container.active {
   box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
-  transition: box-shadow 0.5s ease;
 }
 .portrait-container.inactive .agent-portrait {
   filter: saturate(75%);
@@ -51,9 +50,11 @@
 
 @keyframes pulse {
   0%, 100% {
+    opacity: 0.7;
     box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.2);
   }
   50% {
+    opacity: 1;
     box-shadow: 0 0 30px 15px rgba(0, 255, 0, 0.3);
   }
 }
@@ -69,11 +70,17 @@
   border-radius: 50%;
   box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0);
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease, box-shadow 0.5s ease;
   pointer-events: none;
 }
 
 .portrait-container.active.agent-speaking::before {
   opacity: 1;
   animation: pulse 3s infinite ease-in-out;
+}
+
+.portrait-container.active:not(.agent-speaking)::before {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.5s ease, box-shadow 0.5s ease;
 }
