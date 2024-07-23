@@ -18,26 +18,28 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
+  transition: box-shadow 0.3s ease;
 }
 
 .agent-portrait {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
   transition: transform 0.3s ease;
 }
 
-.agent-portrait:hover {
+.portrait-container:hover .agent-portrait {
   transform: scale(1.05);
 }
 
-.agent-portrait.active {
+.portrait-container.active {
   animation: pulse 2s infinite;
 }
 
-.agent-portrait.listening {
+.portrait-container.listening {
   box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
