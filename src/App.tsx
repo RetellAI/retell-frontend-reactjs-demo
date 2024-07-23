@@ -38,8 +38,9 @@ const App = () => {
           source.buffer = audioBuffer;
           source.connect(analyserRef.current);
           source.start();
-          setIsAgentSpeaking(true);
-          updateHaloEffect();
+          if (isAgentSpeaking) {
+            updateHaloEffect();
+          }
         } catch (error) {
           console.error("Error processing audio:", error);
         }
@@ -78,7 +79,7 @@ const App = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, []);
+  }, [isAgentSpeaking]);
 
   const updateHaloEffect = () => {
     if (analyserRef.current && containerRef.current) {
@@ -88,15 +89,24 @@ const App = () => {
       const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
       const normalizedAverage = average / 255;
 
-      if (isAgentSpeaking) {
-        containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
-      } else {
-        containerRef.current.style.boxShadow = '0 0 0 10px rgba(255, 255, 255, 0.7)';
-      }
+      containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
 
       animationFrameRef.current = requestAnimationFrame(updateHaloEffect);
     }
   };
+
+  useEffect(() => {
+    if (isAgentSpeaking) {
+      updateHaloEffect();
+    } else {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (containerRef.current) {
+        containerRef.current.style.boxShadow = '0 0 0 10px rgba(0, 255, 0, 0.7)';
+      }
+    }
+  }, [isAgentSpeaking]);
 
   const toggleConversation = async () => {
     if (isCalling) {
