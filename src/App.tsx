@@ -79,10 +79,10 @@ const App = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isAgentSpeaking]);
+  }, []);
 
   const updateHaloEffect = () => {
-    if (analyserRef.current && containerRef.current) {
+    if (analyserRef.current && containerRef.current && isAgentSpeaking) {
       const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
       analyserRef.current.getByteFrequencyData(dataArray);
 
@@ -92,6 +92,8 @@ const App = () => {
       containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
 
       animationFrameRef.current = requestAnimationFrame(updateHaloEffect);
+    } else if (containerRef.current && !isAgentSpeaking) {
+      containerRef.current.style.boxShadow = '0 0 0 10px rgba(0, 255, 0, 0.7)';
     }
   };
 
