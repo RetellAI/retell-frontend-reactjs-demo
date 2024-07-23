@@ -7,6 +7,7 @@ const agentId = process.env.REACT_APP_RETELL_AGENTID;
 interface RegisterCallResponse {
   callId?: string;
   sampleRate: number;
+  accessToken: string;
 }
 
 const webClient = new RetellWebClient();
@@ -30,14 +31,13 @@ const App = () => {
     });
 
     webClient.on("audio", (audio: Uint8Array) => {
-      if (audioContextRef.current && analyserRef.current) {
+      if (audioContextRef.current && analyserRef.current && isAgentSpeaking) {
         const audioBuffer = audioContextRef.current.createBuffer(1, audio.length, audioContextRef.current.sampleRate);
         audioBuffer.getChannelData(0).set(audio);
         const source = audioContextRef.current.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(analyserRef.current);
         source.start();
-        setIsAgentSpeaking(true);
         updateHaloEffect();
       }
     });
@@ -59,8 +59,8 @@ const App = () => {
 
     webClient.on("update", (update) => {
       console.log("update", update);
-      if (update.type === "interim" || update.type === "final") {
-        setIsAgentSpeaking(false);
+      if (update.type === "transcript") {
+        setIsAgentSpeaking(update.transcript.role === "agent");
       }
     });
 
@@ -75,20 +75,18 @@ const App = () => {
   }, []);
 
   const updateHaloEffect = () => {
-    if (analyserRef.current && containerRef.current) {
+    if (analyserRef.current && containerRef.current && isAgentSpeaking) {
       const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
       analyserRef.current.getByteFrequencyData(dataArray);
 
       const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
       const normalizedAverage = average / 255;
 
-      if (isAgentSpeaking) {
-        containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
-      } else {
-        containerRef.current.style.boxShadow = '0 0 0 10px rgba(255, 255, 255, 0.7)';
-      }
+      containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
 
       animationFrameRef.current = requestAnimationFrame(updateHaloEffect);
+    } else if (containerRef.current && !isAgentSpeaking) {
+      containerRef.current.style.boxShadow = '0 0 0 10px rgba(255, 255, 255, 0.7)';
     }
   };
 
@@ -102,6 +100,7 @@ const App = () => {
           .startConversation({
             callId: registerCallResponse.callId,
             sampleRate: registerCallResponse.sampleRate,
+            accessToken: registerCallResponse.accessToken,
             enableUpdate: true,
           })
           .catch(console.error);
