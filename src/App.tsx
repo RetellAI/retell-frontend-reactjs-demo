@@ -3,15 +3,10 @@ import "./App.css";
 import { RetellWebClient } from "retell-client-js-sdk";
 
 const agentId = process.env.REACT_APP_RETELL_AGENTID;
-const apiKey = process.env.RETELL_API;
-const sampleRate = parseInt(process.env.RETELL_SAMPLE_RATE || '16000', 10);
 
 interface RegisterCallResponse {
-  call_id: string;
-  access_token: string;
-  call_type: string;
-  agent_id: string;
-  call_status: string;
+  callId?: string;
+  sampleRate: number;
 }
 
 const webClient = new RetellWebClient();
@@ -20,21 +15,40 @@ const App = () => {
   const [isCalling, setIsCalling] = useState(false);
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
+    audioContextRef.current = new AudioContext();
+    analyserRef.current = audioContextRef.current.createAnalyser();
+    analyserRef.current.fftSize = 256;
+
     webClient.on("conversationStarted", () => {
-      console.log("Conversation started");
+      console.log("conversationStarted");
       setIsCalling(true);
     });
 
     webClient.on("audio", (audio: Uint8Array) => {
-      console.log("Received audio chunk, length:", audio.length);
+      if (audioContextRef.current && analyserRef.current) {
+        const audioBuffer = audioContextRef.current.createBuffer(1, audio.length, audioContextRef.current.sampleRate);
+        audioBuffer.getChannelData(0).set(audio);
+        const source = audioContextRef.current.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(analyserRef.current);
+        source.start();
+        setIsAgentSpeaking(true);
+        updateHaloEffect();
+      }
     });
 
     webClient.on("conversationEnded", ({ code, reason }) => {
-      console.log("Conversation ended. Code:", code, "Reason:", reason);
+      console.log("Closed with code:", code, ", reason:", reason);
       setIsCalling(false);
       setIsAgentSpeaking(false);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     });
 
     webClient.on("error", (error) => {
@@ -44,71 +58,81 @@ const App = () => {
     });
 
     webClient.on("update", (update) => {
-      console.log("Received update:", update);
-      if (update.type === "transcript") {
-        const isAgent = update.transcript.role === "agent";
-        console.log("Is agent speaking:", isAgent);
-        setIsAgentSpeaking(isAgent);
+      console.log("update", update);
+      if (update.type === "interim" || update.type === "final") {
+        setIsAgentSpeaking(false);
       }
     });
+
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
   }, []);
 
-  useEffect(() => {
-    console.log("isAgentSpeaking changed:", isAgentSpeaking);
-    if (containerRef.current) {
+  const updateHaloEffect = () => {
+    if (analyserRef.current && containerRef.current) {
+      const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+      analyserRef.current.getByteFrequencyData(dataArray);
+
+      const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+      const normalizedAverage = average / 255;
+
       if (isAgentSpeaking) {
-        containerRef.current.style.boxShadow = '0 0 0 10px rgba(255, 0, 0, 0.7)'; // Red for agent
+        containerRef.current.style.boxShadow = `0 0 0 ${normalizedAverage * 20}px rgba(255, 255, 255, 0.7)`;
       } else {
-        containerRef.current.style.boxShadow = '0 0 0 10px rgba(0, 255, 0, 0.7)'; // Green for user
+        containerRef.current.style.boxShadow = '0 0 0 10px rgba(255, 255, 255, 0.7)';
       }
+
+      animationFrameRef.current = requestAnimationFrame(updateHaloEffect);
     }
-  }, [isAgentSpeaking]);
+  };
 
   const toggleConversation = async () => {
     if (isCalling) {
-      console.log("Stopping conversation");
       webClient.stopConversation();
     } else {
-      console.log("Starting conversation");
-      try {
-        const registerCallResponse = await registerCall(agentId);
-        console.log("Register call response:", registerCallResponse);
-        if (registerCallResponse.call_id) {
-          webClient
-            .startConversation({
-              callId: registerCallResponse.call_id,
-              accessToken: registerCallResponse.access_token,
-              sampleRate: sampleRate,
-              enableUpdate: true,
-            })
-            .catch(console.error);
-        }
-      } catch (error) {
-        console.error("Error registering call:", error);
+      const registerCallResponse = await registerCall(agentId);
+      if (registerCallResponse.callId) {
+        webClient
+          .startConversation({
+            callId: registerCallResponse.callId,
+            sampleRate: registerCallResponse.sampleRate,
+            enableUpdate: true,
+          })
+          .catch(console.error);
       }
     }
   };
 
   async function registerCall(agentId: string): Promise<RegisterCallResponse> {
     console.log("Registering call for agent:", agentId);
-    const response = await fetch('https://api.retellai.com/v2/create-web-call', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        agent_id: agentId
-      }),
-    });
+    try {
+      const response = await fetch("/api/register-call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          agentId: agentId,
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${await response.text()}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data: RegisterCallResponse = await response.json();
+      console.log("Call registered successfully:", data);
+      return data;
+    } catch (err) {
+      console.error("Error registering call:", err);
+      throw new Error(String(err));
     }
-
-    const data: RegisterCallResponse = await response.json();
-    console.log("Register call API response:", data);
-    return data;
   }
 
   return (
@@ -125,8 +149,6 @@ const App = () => {
             className="agent-portrait"
           />
         </div>
-        <p>Call Status: {isCalling ? 'Active' : 'Inactive'}</p>
-        <p>Speaker: {isAgentSpeaking ? 'Agent' : 'User'}</p>
       </header>
     </div>
   );
