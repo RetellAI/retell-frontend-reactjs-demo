@@ -30,15 +30,19 @@ const App = () => {
     });
 
     webClient.on("audio", (audio: Uint8Array) => {
-      if (audioContextRef.current && analyserRef.current) {
-        const audioBuffer = audioContextRef.current.createBuffer(1, audio.length, audioContextRef.current.sampleRate);
-        audioBuffer.getChannelData(0).set(audio);
-        const source = audioContextRef.current.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(analyserRef.current);
-        source.start();
-        setIsAgentSpeaking(true);
-        updateHaloEffect();
+      if (audioContextRef.current && analyserRef.current && audio.length > 0) {
+        try {
+          const audioBuffer = audioContextRef.current.createBuffer(1, audio.length, audioContextRef.current.sampleRate);
+          audioBuffer.getChannelData(0).set(audio);
+          const source = audioContextRef.current.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(analyserRef.current);
+          source.start();
+          setIsAgentSpeaking(true);
+          updateHaloEffect();
+        } catch (error) {
+          console.error("Error processing audio:", error);
+        }
       }
     });
 
@@ -59,8 +63,10 @@ const App = () => {
 
     webClient.on("update", (update) => {
       console.log("update", update);
-      if (update.type === "interim" || update.type === "final") {
+      if (update.turntaking === "user_turn") {
         setIsAgentSpeaking(false);
+      } else if (update.turntaking === "agent_turn") {
+        setIsAgentSpeaking(true);
       }
     });
 
