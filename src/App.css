@@ -39,16 +39,8 @@
   filter: saturate(110%);
 }
 
-.portrait-container.active.agent-speaking::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,255,0,0.5) 0%, rgba(0,255,0,0) 70%);
-  z-index: -1;
+.portrait-container.active.agent-speaking {
+  box-shadow: 0 0 20px 10px rgba(0, 255, 0, 0.3);
 }
 
 .portrait-container.inactive .agent-portrait {
