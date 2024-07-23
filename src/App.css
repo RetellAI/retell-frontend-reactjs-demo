@@ -43,28 +43,20 @@
   --halo-spread: 10px;
 }
 .portrait-container.active.agent-speaking {
-  animation: pulse 3s infinite ease-in-out;
+  animation: pulse 3s infinite;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
 }
+
 @keyframes pulse {
   0%, 100% {
     --halo-color: rgba(0, 255, 0, 0.2);
     --halo-size: 20px;
     --halo-spread: 10px;
   }
-  25% {
-    --halo-color: rgba(0, 255, 0, 0.25);
-    --halo-size: 25px;
-    --halo-spread: 12.5px;
-  }
   50% {
     --halo-color: rgba(0, 255, 0, 0.3);
     --halo-size: 30px;
     --halo-spread: 15px;
-  }
-  75% {
-    --halo-color: rgba(0, 255, 0, 0.25);
-    --halo-size: 25px;
-    --halo-spread: 12.5px;
   }
 }
 .portrait-container.inactive .agent-portrait {
