@@ -32,19 +32,6 @@ build/
 # Static Bundles
 .bundle/
 
-# Compiled JavaScript files
-*.js
-*.jsx
-*.ts
-*.tsx
-*.map
-
-# Compiled CSS files
-*.css
-*.less
-*.scss
-*.sass
-
 # Minified files
 *.min.*
 
