@@ -7,11 +7,28 @@ using React and Node.js. It showcases using **our [JS Client SDK](https://github
 
 ## Setup Tutorial
 
-Check out our [doc](https://docs.retellai.com/guide/react-web-call-setup) for a
+Check out our [doc](https://docs.retellai.com/make-calls/web-call) for a
 step-by-step guide on setting up Web Call.
 
 ## Run this Demo
 
-Step 1: `npm install`
+Step 1: Step up example backend
 
-Step 2: `npm start`
+1. Go to example_backend folder
+
+2. `npm install`
+
+3. In `index.js` file, replace YOUR_API_KEY with your api key
+
+4. `node index.js` 
+
+
+Step 2: Step up frontend
+
+1. go to frontend_demo folder
+
+2. `npm install`
+
+3. In `App.tsx`, replace ENTER_YOUR_AGENT_ID with your agent ID
+
+4. `npm run start`
