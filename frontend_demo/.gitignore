@@ -86,7 +86,6 @@ out/
 
 # Ignore Gatsby files
 .cache/
-public/
 
 # Ignore Create React App specific files
 .eslintcache
