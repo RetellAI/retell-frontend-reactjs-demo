@@ -1,11 +1,16 @@
 import axios from 'axios';
 
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  // Handle preflight request
   if (req.method === 'OPTIONS') {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    return res.status(200).end();
+    res.status(200).end();
+    return;
   }
 
   if (req.method !== 'POST') {
@@ -13,18 +18,9 @@ export default async function handler(req, res) {
   }
 
   const { agent_id, metadata, retell_llm_dynamic_variables } = req.body;
-
-  // Prepare the payload for the API request
   const payload = { agent_id };
-
-  // Conditionally add optional fields if they are provided
-  if (metadata) {
-    payload.metadata = metadata;
-  }
-
-  if (retell_llm_dynamic_variables) {
-    payload.retell_llm_dynamic_variables = retell_llm_dynamic_variables;
-  }
+  if (metadata) payload.metadata = metadata;
+  if (retell_llm_dynamic_variables) payload.retell_llm_dynamic_variables = retell_llm_dynamic_variables;
 
   try {
     const response = await axios.post(
@@ -38,11 +34,9 @@ export default async function handler(req, res) {
       }
     );
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
     res.status(201).json(response.data);
   } catch (error) {
     console.error('Error creating web call:', error.response?.data || error.message);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.status(500).json({ error: 'Failed to create web call' });
+    res.status(500).json({ error: 'Failed to create web call', details: error.message });
   }
 }

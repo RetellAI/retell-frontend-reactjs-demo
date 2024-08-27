@@ -71,29 +71,35 @@ const App = () => {
     }
   };
 
-  async function registerCall(agentId: string): Promise<RegisterCallResponse> {
-    try {
-      const response = await fetch("/api/create-web-call", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          agent_id: agentId,
-        }),
-      });
+async function registerCall(agentId: string): Promise<RegisterCallResponse> {
+  console.log("Registering call for agent ID:", agentId);
+  try {
+    const response = await fetch("/api/create-web-call", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agent_id: agentId,
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
+    console.log("Response status:", response.status);
+    const responseText = await response.text();
+    console.log("Response text:", responseText);
 
-      const data: RegisterCallResponse = await response.json();
-      return data;
-    } catch (err) {
-      console.error("Error registering call:", err);
-      throw err;
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${responseText}`);
     }
+
+    const data: RegisterCallResponse = JSON.parse(responseText);
+    console.log("Parsed response data:", data);
+    return data;
+  } catch (err) {
+    console.error("Error registering call:", err);
+    throw err;
   }
+}
 
   return (
     <div className="App">
