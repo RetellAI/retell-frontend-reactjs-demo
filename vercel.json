@@ -24,6 +24,14 @@
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
         }
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'self' https://*.squarespace.com https://www.fullyinformedconversations.org"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "ALLOW-FROM https://*.squarespace.com https://www.fullyinformedconversations.org"
+        }
       ]
     }
   ],
