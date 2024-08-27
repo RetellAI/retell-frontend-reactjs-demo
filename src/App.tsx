@@ -12,8 +12,8 @@ const retellWebClient = new RetellWebClient();
 
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
+  const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
 
-  // Initialize the SDK
   useEffect(() => {
     retellWebClient.on("call_started", () => {
       console.log("call started");
@@ -23,18 +23,21 @@ const App = () => {
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
+      setIsAgentSpeaking(false);
     });
 
     retellWebClient.on("agent_start_talking", () => {
       console.log("agent_start_talking");
+      setIsAgentSpeaking(true);
     });
 
     retellWebClient.on("agent_stop_talking", () => {
       console.log("agent_stop_talking");
+      setIsAgentSpeaking(false);
     });
 
     retellWebClient.on("audio", (audio) => {
-      // console.log("Received audio", audio.length);
+      // Handle audio if needed
     });
 
     retellWebClient.on("update", (update) => {
@@ -49,6 +52,7 @@ const App = () => {
       console.error("An error occurred:", error);
       retellWebClient.stopCall();
       setIsCalling(false);
+      setIsAgentSpeaking(false);
     });
   }, []);
 
@@ -71,48 +75,44 @@ const App = () => {
     }
   };
 
-async function registerCall(agentId: string): Promise<RegisterCallResponse> {
-  console.log("Registering call for agent ID:", agentId);
-  try {
-    const response = await fetch("/api/create-web-call", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        agent_id: agentId,
-      }),
-    });
-
-    console.log("Response status:", response.status);
-    const responseText = await response.text();
-    console.log("Response text:", responseText);
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${responseText}`);
-    }
-
-    let data: RegisterCallResponse;
+  async function registerCall(agentId: string): Promise<RegisterCallResponse> {
+    console.log("Registering call for agent ID:", agentId);
     try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      console.error("Failed to parse JSON:", e);
-      throw new Error(`Failed to parse JSON: ${responseText}`);
+      const response = await fetch("/api/create-web-call", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          agent_id: agentId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const data: RegisterCallResponse = await response.json();
+      return data;
+    } catch (err) {
+      console.error("Error registering call:", err);
+      throw err;
     }
-    console.log("Parsed response data:", data);
-    return data;
-  } catch (err) {
-    console.error("Error registering call:", err);
-    throw err;
   }
-}
 
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={toggleConversation}>
-          {isCalling ? "Stop" : "Start"}
-        </button>
+        <div
+          className={`portrait-container ${isCalling ? 'active' : 'inactive'} ${isAgentSpeaking ? 'agent-speaking' : ''}`}
+          onClick={toggleConversation}
+        >
+          <img
+            src="/Fiona_Round.png"
+            alt="AI Agent"
+            className="agent-portrait"
+          />
+        </div>
       </header>
     </div>
   );
