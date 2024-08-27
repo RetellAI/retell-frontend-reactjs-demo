@@ -1,13 +1,9 @@
 import axios from 'axios';
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+  console.log('API route called with method:', req.method);
+  console.log('Request body:', req.body);
 
-  // Handle preflight request
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
@@ -21,6 +17,8 @@ export default async function handler(req, res) {
 
     try {
       console.log('Sending request to Retell API with payload:', JSON.stringify(payload));
+      console.log('RETELL_API key (first 4 chars):', process.env.RETELL_API ? process.env.RETELL_API.substring(0, 4) : 'undefined');
+      
       const response = await axios.post(
         'https://api.retellai.com/v2/create-web-call',
         payload,
@@ -35,7 +33,8 @@ export default async function handler(req, res) {
       console.log('Received response from Retell API:', response.data);
       res.status(201).json(response.data);
     } catch (error) {
-      console.error('Error creating web call:', error.response?.data || error.message);
+      console.error('Error creating web call:', error);
+      console.error('Error response:', error.response ? error.response.data : 'No response data');
       res.status(500).json({ error: 'Failed to create web call', details: error.message });
     }
   } else {
