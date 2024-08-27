@@ -86,7 +86,7 @@
 }
 
 .portrait-container.inactive .agent-portrait {
-  filter: saturate(50%);
+  filter: saturate(75%);
 }
 
 @keyframes pulse {
