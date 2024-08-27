@@ -92,7 +92,13 @@ async function registerCall(agentId: string): Promise<RegisterCallResponse> {
       throw new Error(`Error: ${response.status} - ${responseText}`);
     }
 
-    const data: RegisterCallResponse = JSON.parse(responseText);
+    let data: RegisterCallResponse;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error("Failed to parse JSON:", e);
+      throw new Error(`Failed to parse JSON: ${responseText}`);
+    }
     console.log("Parsed response data:", data);
     return data;
   } catch (err) {
