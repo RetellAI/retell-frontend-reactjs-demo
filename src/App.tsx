@@ -119,7 +119,7 @@ const App = () => {
           </div>
           {showInstructions && (
             <div className="instructions">
-              <p>Click or Tap</p>
+              <p><strong>Click</strong> or <strong>Tap</strong></p>
               <p>Fiona's portrait to begin</p>
             </div>
           )}
