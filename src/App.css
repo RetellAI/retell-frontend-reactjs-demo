@@ -35,6 +35,7 @@
 
 .instructions {
   position: absolute;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
@@ -42,10 +43,9 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
   font-size: 1rem;
-  opacity: 0.8;
+  opacity: 1;
   transition: opacity 0.3s ease;
   pointer-events: none;
-  top: calc(25% - var(--portrait-size) / 4);
 }
 
 .portrait-container {
