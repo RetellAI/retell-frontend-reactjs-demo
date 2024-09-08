@@ -81,7 +81,7 @@
 
 .portrait-container:hover {
   transform: scale(1.05);
-  opacity: 0.8;
+  opacity: 1.2;
 }
 
 .portrait-container:hover .agent-portrait {
@@ -123,7 +123,7 @@
 
 .portrait-container.inactive .agent-portrait {
   filter: saturate(70%);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 
