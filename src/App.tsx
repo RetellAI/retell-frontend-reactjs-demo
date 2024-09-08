@@ -13,20 +13,20 @@ const retellWebClient = new RetellWebClient();
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(true);
+  const [instructionsVisible, setInstructionsVisible] = useState(true);
 
   useEffect(() => {
     retellWebClient.on("call_started", () => {
       console.log("call started");
       setIsCalling(true);
-      setShowInstructions(false);
+      setInstructionsVisible(false);
     });
 
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
       setIsAgentSpeaking(false);
-      setShowInstructions(true);
+      setInstructionsVisible(true);
     });
 
     retellWebClient.on("agent_start_talking", () => {
