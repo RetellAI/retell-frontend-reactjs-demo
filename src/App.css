@@ -81,6 +81,7 @@
 
 .portrait-container:hover {
   transform: scale(1.05);
+  opacity: 0.8;
 }
 
 .portrait-container:hover .agent-portrait {
@@ -121,8 +122,8 @@
 }
 
 .portrait-container.inactive .agent-portrait {
-  filter: saturate(80%);
-  opacity: 0.3;
+  filter: saturate(70%);
+  opacity: 0.5;
 }
 
 @keyframes pulse {
@@ -140,5 +141,5 @@
 .portrait-container.active.agent-speaking,
 .portrait-container.active:not(.agent-speaking),
 .portrait-container.inactive {
-  transition: all 0.5s ease, transform 0.5s ease;
+  transition: all 0.3s ease, transform 0.3s ease;
 }
