@@ -63,7 +63,7 @@ const App = () => {
     if (isCalling) {
       retellWebClient.stopCall();
     } else {
-      setShowInstructions(false);
+      setInstructionsVisible(false);
       try {
         const registerCallResponse = await registerCall(agentId);
         if (registerCallResponse.access_token) {
@@ -72,11 +72,11 @@ const App = () => {
           });
         } else {
           console.error("No access token received");
-          setShowInstructions(true);
+          setInstructionsVisible(true);
         }
       } catch (error) {
         console.error("Error starting call:", error);
-        setShowInstructions(true);
+        setInstructionsVisible(true);
       }
     }
   };
