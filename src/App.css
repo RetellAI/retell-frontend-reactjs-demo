@@ -43,7 +43,7 @@
   color: white;
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
-  font-size: 1rem;
+  font-size: 1.2rem;
   opacity: 0;
   visibility: hidden;
   transition: opacity 1s ease, visibility 1s ease;
