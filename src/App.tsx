@@ -13,17 +13,20 @@ const retellWebClient = new RetellWebClient();
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
   const [isAgentSpeaking, setIsAgentSpeaking] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   useEffect(() => {
     retellWebClient.on("call_started", () => {
       console.log("call started");
       setIsCalling(true);
+      setShowInstructions(false);
     });
 
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
       setIsAgentSpeaking(false);
+      setShowInstructions(true);
     });
 
     retellWebClient.on("agent_start_talking", () => {
@@ -103,15 +106,23 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <div
-          className={`portrait-container ${isCalling ? 'active' : 'inactive'} ${isAgentSpeaking ? 'agent-speaking' : ''}`}
-          onClick={toggleConversation}
-        >
-          <img
-            src="/Fiona_Round.png"
-            alt="AI Agent"
-            className="agent-portrait"
-          />
+        <div className="portrait-wrapper">
+          <div
+            className={`portrait-container ${isCalling ? 'active' : 'inactive'} ${isAgentSpeaking ? 'agent-speaking' : ''}`}
+            onClick={toggleConversation}
+          >
+            <img
+              src="/Fiona_Round.png"
+              alt="AI Agent"
+              className="agent-portrait"
+            />
+          </div>
+          {showInstructions && (
+            <div className="instructions">
+              <p>Click or Tap</p>
+              <p>Fiona's portrait to begin</p>
+            </div>
+          )}
         </div>
       </header>
     </div>
