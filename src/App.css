@@ -126,14 +126,13 @@
   opacity: 0.6;
 }
 
-
 .portrait-container:active {
   transform: scale(0.95);
   box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.5);
 }
 
 .portrait-container:active .agent-portrait {
-  filter: brightness(1.2);
+  filter: brightness(1.1);
 }
 
 @keyframes pulse {
