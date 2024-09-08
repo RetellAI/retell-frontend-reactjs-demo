@@ -117,12 +117,10 @@ const App = () => {
               className="agent-portrait"
             />
           </div>
-          {showInstructions && (
-            <div className="instructions">
-              <p><strong>Click</strong> or <strong>Tap</strong></p>
-              <p>Fiona's portrait to begin</p>
-            </div>
-          )}
+          <div className={`instructions ${instructionsVisible ? 'visible' : 'hidden'}`}>
+            <p><strong>Click</strong> or <strong>Tap</strong></p>
+            <p>Fiona's portrait to begin</p>
+          </div>
         </div>
       </header>
     </div>
