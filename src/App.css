@@ -29,15 +29,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
 }
 
 .instructions {
-  position: fixed;
-  top: 10%;
+  position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   text-align: center;
   color: white;
   font-family: 'Poppins', sans-serif;
@@ -47,6 +48,19 @@
   visibility: hidden;
   transition: opacity 1s ease, visibility 1s ease;
   pointer-events: none;
+  z-index: 10;
+}
+
+.portrait-container {
+  position: relative;
+  width: var(--portrait-size);
+  height: var(--portrait-size);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .instructions.visible {
@@ -57,18 +71,6 @@
 .instructions.hidden {
   opacity: 0;
   visibility: hidden;
-}
-
-.portrait-container {
-  position: relative;
-  width: var(--portrait-size);
-  height: var(--portrait-size);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease, transform 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .agent-portrait {
@@ -99,7 +101,7 @@
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: opacity 0.5s ease, box-shadow 0.5s ease;
+  transition: all 0.3s ease, opacity 0.5s ease, box-shadow 0.5s ease;
 }
 
 .portrait-container::before {
