@@ -57,6 +57,18 @@ const App = () => {
       setIsCalling(false);
       setIsAgentSpeaking(false);
     });
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.currentTarget.classList.add('active');
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('active');
+    toggleConversation();
+  }; 
+
   }, []);
 
   const toggleConversation = async () => {
@@ -110,6 +122,8 @@ const App = () => {
           <div
             className={`portrait-container ${isCalling ? 'active' : 'inactive'} ${isAgentSpeaking ? 'agent-speaking' : ''}`}
             onClick={toggleConversation}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             <img
               src="/Fiona_Round.png"
