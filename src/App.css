@@ -34,8 +34,8 @@
 }
 
 .instructions {
-  position: absolute;
-  top: 25%;
+  position: fixed;
+  top: 10%;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
