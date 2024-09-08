@@ -57,18 +57,6 @@ const App = () => {
       setIsCalling(false);
       setIsAgentSpeaking(false);
     });
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    e.currentTarget.classList.add('active');
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
-    e.currentTarget.classList.remove('active');
-    toggleConversation();
-  }; 
-
   }, []);
 
   const toggleConversation = async () => {
@@ -114,6 +102,17 @@ const App = () => {
       throw err;
     }
   }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.currentTarget.classList.add('active');
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('active');
+    toggleConversation();
+  }; 
 
   return (
     <div className="App">
