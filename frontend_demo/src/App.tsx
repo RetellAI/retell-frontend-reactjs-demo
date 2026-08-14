@@ -36,15 +36,15 @@ const App = () => {
       console.log("agent_stop_talking");
     });
     
-    // Real time pcm audio bytes being played back, in format of Float32Array
-    // only available when emitRawAudioSamples is true
+    // Float32Array analyser snapshots for visualization, not continuous PCM.
+    // Only available when emitRawAudioSamples is true.
     retellWebClient.on("audio", (audio) => {
       // console.log(audio);
     });
     
     // Update message such as transcript
-    // You can get transcrit with update.transcript
-    // Please note that transcript only contains last 5 sentences to avoid the payload being too large
+    // You can get the transcript with update.transcript.
+    // It contains up to the last 5 utterances (role/content entries).
     retellWebClient.on("update", (update) => {
       // console.log(update);
     });
